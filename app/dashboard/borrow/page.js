@@ -13,6 +13,7 @@ export default function Borrow () {
     const [rate, setRate] = useState(0);
     const [amount,setAmount] = useState(undefined);
     const [payBack,setpayBack] = useState(0);
+    const [duration,setdurations] = useState(0)
     
     useEffect(()=>{
         if (amount>= 1){
@@ -51,11 +52,11 @@ export default function Borrow () {
                                 onClick={()=> {
                                     setclickedRate(item.id);
                                     if(item.days === 7){
-                                        setRate(15.5)
+                                        setRate(15.5),setdurations(7)
                                     }else if (item.days ===30){
-                                        setRate(12)
+                                        setRate(12),setdurations(30)
                                     }else if (item.days === 90){
-                                        setRate(9.5)
+                                        setRate(9.5),setdurations(90)
                                     }
                                 }}
                                 className={`h-16 flex justify-center items-center bg-blue-700 text-white text-md uppercase rounded-md`}>{item.days}days</li>)
@@ -65,7 +66,7 @@ export default function Borrow () {
                 </div>
 
                 <div className="border-dashed border border-blue-500 p-4 rounded-md">
-                        <p className="text-gray-800">interest rate for ... days</p>
+                        <p className="text-gray-800">interest rate for {duration} days</p>
                         <p className="text-6xl text-blue-900">{rate}%</p>
                 </div>
 

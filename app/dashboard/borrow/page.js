@@ -4,6 +4,12 @@ import {TextField} from "@mui/material";
 import { db } from "@/config/firebase.config";
 import { addDoc, collection } from "firebase/firestore";
 import {CircularProgress} from "@mui/material";
+import { useFormik } from "formik";
+import * as yup from "yup";
+
+const schema = yup.object().shape({
+    amount:yup.number().required().min(1000),
+})
 
 const durations = [
     {id:"7d",days:7},
@@ -14,17 +20,45 @@ const durations = [
 export default function Borrow () {
     const [clickedRate,setclickedRate]= useState(undefined);
     const [rate, setRate] = useState(0);
-    const [amount,setAmount] = useState(undefined);
     const [payBack,setpayBack] = useState(0);
     const [duration,setdurations] = useState(0)
-    const [opsProgress, setopsProgress] = useState(true)
+    const [opsProgress, setopsProgress] = useState(false);
+
+    const { handleSubmit,handleChange,values,touched,errors } = useFormik({
+        initialValues:{
+            amount:undefined
+        },
+        onSubmit: async () =>{
+            setopsProgress(true);
+            await addDoc(collection(db,"loans"),{
+                user:"dummy",
+                amount:values.amount,
+                payBack:payBack,
+                rate:rate,
+                duration: duration,
+                timeCreated: new Date().getTime()
+            })
+            .then(()=>{
+                setopsProgress(false);
+                alert(`you have succesfully borrowed ${values.amount} at the rate of ${rate}`)
+            })
+            .catch(e =>{
+                setopsProgress(false);
+                console.error(e);
+                alert("Encountered an unknown error")
+            })
+        },
+        validationSchema:schema
+    })
     
     useEffect(()=>{
         if (amount>= 1){
-            const interest = (rate * amount)/100;
-            setpayBack(amount + interest)
+            const interest = (rate * values.amount)/100;
+            setpayBack(values.amount + interest)
         }
-    },[amount,rate])
+    },[values.amount,rate]);
+
+  
 
     
     return (
@@ -34,20 +68,19 @@ export default function Borrow () {
                     <span className="font-thin text-lg text-blue-800">Get an instant loan</span>
                 </blockquote>
 
-                <form>
+                <form onSubmit={handleSubmit}>
                     <div className="flex flex-col gap-1">
                         <TextField
                         id="amount"
                         type="number"
                         variant="outlined"
                         placeholder="loan amount"
-                        value={amount}
-                        onChange={(text)=> setAmount(Number(text.target.value))}/>
-
+                        value={values.amount}
+                        onChange={handleChange}/>
+                        {touched.amount && errors.amount ? <span className="taxt-xs text-red-500">{errors.amount}</span>:null}
                     </div>
-                </form>
 
-                <div className="border-dashed border border-blue-500 p-4 rounded-md">
+                    <div className="border-dashed border border-blue-500 p-4 rounded-md mt-2">
                     <p className="text-blue-700 text-sm mb-3">choose loan duration</p>
                     <ul className="grid grid-cols-3  gap-2">
                         {
@@ -69,6 +102,14 @@ export default function Borrow () {
 
                 </div>
 
+
+                    <div className="flex items-center gap-2 mt-1">
+                    <button type="submit" className="p-2 rounded-md bg-blue-600 text-white text-xl uppercase">Get Loan</button>
+                    <CircularProgress style={{display:!opsProgress? "none":"flex"}}/>
+                </div>
+                </form>
+
+          
                 <div className="border-dashed border border-blue-500 p-4 rounded-md">
                         <p className="text-gray-800">interest rate for {duration} days</p>
                         <p className="text-6xl text-blue-900">{rate}%</p>
@@ -77,11 +118,6 @@ export default function Borrow () {
                 <div className=" flex flex-col gap-3 bg-gradient-to-b from-blue-600 to-blue-800 border-dashed border border-blue-500 p-4 rounded-md">
                         <p className="text-gray-800">you will pay back</p>
                         <p className="text-4xl text-white">N{payBack}</p>
-                </div>
-
-                <div className="flex items-center gap-2">
-                    <button className="p-2 rounded-md bg-blue-600 text-white text-xl uppercase">Get Loan</button>
-                    <CircularProgress style={{display:!opsProgress? "none":"flex"}}/>
                 </div>
 
             </div>

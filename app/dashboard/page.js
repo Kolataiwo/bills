@@ -1,13 +1,14 @@
 import Image from "next/image";
 
-export default function dashboard (){
+export default function Dashboard () {
     return (
         <main>
-            <p>user dashboard</p>
-            <p>propose a UI design</p>
-            <p>build the UI</p>
-            <p>propose possible changes</p>
-            <image width={200} height={200} src="/home-equity.jpg" alt="eguity image"/>
+            <p>User dashboard</p>
+            <p>Propose a UI design</p>
+            <p>Build the UI</p>
+            <p>Propose possible changes</p>
+
+            <Image width={480} height={240} src="/sample_2.png" alt="a screenshot"/>
         </main>
     )
 }

@@ -67,7 +67,6 @@ export default function UpdateProfile () {
                         value={values.phone}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        placeholder="eg. Ademola"
                         className="w-full"
                         />
                         {touched.phone && errors.phone ? <span className="text-xs text-red-500">{errors.phone}</span> : null}
@@ -83,7 +82,6 @@ export default function UpdateProfile () {
                         value={values.address}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        placeholder="eg. Ademola"
                         className="w-full"
                         />
                         {touched.address && errors.address ? <span className="text-xs text-red-500">{errors.address}</span> : null}

@@ -1,15 +1,15 @@
 "use client"
-import { Children, createContext,useState } from "react";
+import { createContext,useState } from "react";
 
 
 const AppContext=  createContext();
 
-const AppProvider = ({Children}) => {
+const AppProvider = ({children}) => {
     const [loanDocId,setLoanDocId] = useState(null);
 
     return(
         <AppContext.Provider value={{loanDocId,setLoanDocId}}>
-            {Children}
+            {children}
         </AppContext.Provider>
     )
 }

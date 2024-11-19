@@ -1,7 +1,12 @@
+"use server"
+import { redirect } from "next/navigation";
 import Image from "next/image";
 
-export default function Home() {
+export default async function Home() {
+  redirect("/auth/signin")
   return (
-    <p>home page</p>
+    <main>
+      <p>home page</p>
+    </main>
   );
 }

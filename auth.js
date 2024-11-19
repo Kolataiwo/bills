@@ -1,14 +1,27 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import TwitterProvider from "next-auth/providers/twitter";
 import { FirestoreAdapter } from "@auth/firebase-adapter";
 import { cert } from "firebase-admin/app";
+
  
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     GoogleProvider({
         clientId: process.env.AUTH_GOOGLE_ID,
-        clientSecret: process.env.AUTH_GOOGLE_SECRET
+        clientSecret: process.env.AUTH_GOOGLE_SECRET,
+
+
     }),
+    TwitterProvider({
+      clientId: process.env.AUTH_TWITTER_ID,
+      clientSecret: process.env.AUTH_TWITTER_SECRET,
+       version: "2.0",
+
+
+  }),
+
+   
   ],
   adapter: FirestoreAdapter({
     credential: cert({

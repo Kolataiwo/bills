@@ -32,7 +32,7 @@ export default async function Auth () {
                         </button>
                     </form>
                     <form action={async ()=>{
-                        "use server"
+                        gi
                         await signIn("twitter")
                     }}
                     className="mb-2">
